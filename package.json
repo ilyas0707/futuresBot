@@ -1,0 +1,24 @@
+{
+  "name": "crypto-bot",
+  "version": "1.0.0",
+  "description": "Crypto bot",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "crypto"
+  ],
+  "author": "Ilyas Yangurazov <ilyas.yangurazov.iy@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "express-favicon": "^2.0.1",
+    "node-telegram-bot-api": "0.56.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
