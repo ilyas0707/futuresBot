@@ -104,21 +104,21 @@ bot.on('callback_query', (query) => {
             }
         })
 
-        bot.on(/\/ticker (.+)/, (msg) => {
+        bot.onText(/\/ticker (.+)/, (msg) => {
             const text = msg.text
 
             fastSignalResponse.choose2 = text
             bot.sendMessage(chatId, 'Цена входа?')
         })
 
-        bot.on(/\/entry (.+)/, (msg) => {
+        bot.onText(/\/entry (.+)/, (msg) => {
             const text = msg.text
 
             fastSignalResponse.choose3 = text
             bot.sendMessage(chatId, 'Стоп?')
         })
 
-        bot.on(/\/stop (.+)/, (msg) => {
+        bot.onText(/\/stop (.+)/, (msg) => {
             const text = msg.text
 
             fastSignalResponse.choose4 = text
