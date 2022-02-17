@@ -96,34 +96,34 @@ bot.on('callback_query', (query) => {
             },
         })
 
-        bot.on('callback_query', async (query) => {
+        bot.on('callback_query', (query) => {
             if (query.data) {
                 fastSignalResponse.choose1 = query.data
 
-                await bot.sendMessage(chatId, 'Тикер монеты?')
+                bot.sendMessage(chatId, 'Тикер монеты?')
             }
         })
 
-        bot.on('message', async (msg) => {
+        bot.on('message', (msg) => {
             const text = msg.text
 
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    await bot.sendMessage(chatId, 'Цена входа?')
+                    bot.sendMessage(chatId, 'Цена входа?')
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    await bot.sendMessage(chatId, 'Стоп?')
+                    bot.sendMessage(chatId, 'Стоп?')
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    await bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
+                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
                 }
             } catch (e) {
-                await bot.sendMessage(chatId, 'Произошла какая то ошибка!')
+                bot.sendMessage(chatId, 'Произошла какая то ошибка!')
             }
         })
     }
@@ -135,54 +135,54 @@ bot.on('callback_query', (query) => {
             },
         })
 
-        bot.on('callback_query', async (query) => {
+        bot.on('callback_query', (query) => {
             if (query.data === 'long' || query.data === 'short') {
                 fastSignalResponse.choose1 = query.data
 
-                await bot.sendMessage(chatId, 'Тикер монеты?')
+                bot.sendMessage(chatId, 'Тикер монеты?')
             }
 
             if (query.data === 'yes' || query.data === 'no') {
                 if (query.data === 'yes') {
-                    await bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
+                    bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
                 }
 
                 if (query.data === 'no') {
-                    await bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}\n${fastSignalResponse.choose5.map(({ id, text }) => {
+                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}\n${fastSignalResponse.choose5.map(({ id, text }) => {
                         return `Тейк ${id} - ${text.replace('/take ', '')}`
                     }).join('\n')}`)
                 }
             }
         })
 
-        bot.on('message', async (msg) => {
+        bot.on('message', (msg) => {
             const text = msg.text
 
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    await bot.sendMessage(chatId, 'Цена входа?')
+                    bot.sendMessage(chatId, 'Цена входа?')
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    await bot.sendMessage(chatId, 'Стоп?')
+                    bot.sendMessage(chatId, 'Стоп?')
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    await bot.sendMessage(chatId, 'Тейк 1')
+                    bot.sendMessage(chatId, 'Тейк 1')
                 }
 
                 if (text.includes('/take')) {
                     fastSignalResponse.choose5.push({ id: fastSignalResponse.choose5.length + 1, text: text })
                     
                     if (fastSignalResponse.choose5.length >= 0 && fastSignalResponse.choose5.length < 3) {
-                        await bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
+                        bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
                     }
 
                     if (fastSignalResponse.choose5.length >= 3) {
-                        await bot.sendMessage(chatId, 'Добавить дополнительный тейк?', {
+                        bot.sendMessage(chatId, 'Добавить дополнительный тейк?', {
                             reply_markup: {
                                 inline_keyboard: fastSignalChoose2,
                             },
@@ -190,7 +190,7 @@ bot.on('callback_query', (query) => {
                     }
                 }
             } catch (e) {
-                await bot.sendMessage(chatId, 'Произошла какая то ошибка!')
+                bot.sendMessage(chatId, 'Произошла какая то ошибка!')
             }
         })
     }
