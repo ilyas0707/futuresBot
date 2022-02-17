@@ -110,23 +110,20 @@ bot.on('callback_query', (query) => {
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    if (fastSignalResponse.choose2.length > 0) {
-                        bot.sendMessage(chatId, 'Цена входа?')
-                    }
+                    bot.sendMessage(chatId, 'Цена входа?')
+                    msg.text = ''
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    if (fastSignalResponse.choose3.length > 0) {
-                        bot.sendMessage(chatId, 'Стоп?')
-                    }
+                    bot.sendMessage(chatId, 'Стоп?')
+                    msg.text = ''
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    if (fastSignalResponse.choose4.length > 0) {
-                        bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
-                    }
+                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
+                    msg.text = ''
                 }
             } catch (e) {
                 bot.sendMessage(chatId, 'Произошла какая то ошибка!')
@@ -167,23 +164,20 @@ bot.on('callback_query', (query) => {
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    if (fastSignalResponse.choose2.length > 0) {
-                        bot.sendMessage(chatId, 'Цена входа?')
-                    }
+                    bot.sendMessage(chatId, 'Цена входа?')
+                    msg.text = ''
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    if (fastSignalResponse.choose3.length > 0) {
-                        bot.sendMessage(chatId, 'Стоп?')
-                    }
+                    bot.sendMessage(chatId, 'Стоп?')
+                    msg.text = ''
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    if (fastSignalResponse.choose4.length > 0) {
-                        bot.sendMessage(chatId, 'Тейк 1')
-                    }
+                    bot.sendMessage(chatId, 'Тейк 1')
+                    msg.text = ''
                 }
 
                 if (text.includes('/take')) {
@@ -191,6 +185,7 @@ bot.on('callback_query', (query) => {
                     
                     if (fastSignalResponse.choose5.length >= 0 && fastSignalResponse.choose5.length < 3) {
                         bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
+                        msg.text = ''
                     }
 
                     if (fastSignalResponse.choose5.length >= 3) {
@@ -199,6 +194,7 @@ bot.on('callback_query', (query) => {
                                 inline_keyboard: fastSignalChoose2,
                             },
                         })
+                        msg.text = ''
                     }
                 }
             } catch (e) {
