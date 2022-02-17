@@ -110,21 +110,21 @@ bot.on('callback_query', (query) => {
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    if (msg.text) {
+                    if (fastSignalResponse.choose2.length > 0) {
                         bot.sendMessage(chatId, 'Цена входа?')
                     }
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    if (msg.text) {
+                    if (fastSignalResponse.choose3.length > 0) {
                         bot.sendMessage(chatId, 'Стоп?')
                     }
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    if (msg.text) {
+                    if (fastSignalResponse.choose4.length > 0) {
                         bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
                     }
                 }
@@ -167,21 +167,21 @@ bot.on('callback_query', (query) => {
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    if (msg.text) {
+                    if (fastSignalResponse.choose2.length > 0) {
                         bot.sendMessage(chatId, 'Цена входа?')
                     }
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    if (msg.text) {
+                    if (fastSignalResponse.choose3.length > 0) {
                         bot.sendMessage(chatId, 'Стоп?')
                     }
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    if (msg.text) {
+                    if (fastSignalResponse.choose4.length > 0) {
                         bot.sendMessage(chatId, 'Тейк 1')
                     }
                 }
