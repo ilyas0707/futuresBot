@@ -110,17 +110,23 @@ bot.on('callback_query', (query) => {
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    bot.sendMessage(chatId, 'Цена входа?')
+                    if (msg.text) {
+                        bot.sendMessage(chatId, 'Цена входа?')
+                    }
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    bot.sendMessage(chatId, 'Стоп?')
+                    if (msg.text) {
+                        bot.sendMessage(chatId, 'Стоп?')
+                    }
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
+                    if (msg.text) {
+                        bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
+                    }
                 }
             } catch (e) {
                 bot.sendMessage(chatId, 'Произошла какая то ошибка!')
@@ -161,17 +167,23 @@ bot.on('callback_query', (query) => {
             try {
                 if (text.includes('/ticker')) {
                     fastSignalResponse.choose2 = text
-                    bot.sendMessage(chatId, 'Цена входа?')
+                    if (msg.text) {
+                        bot.sendMessage(chatId, 'Цена входа?')
+                    }
                 }
 
                 if (text.includes('/entry')) {
                     fastSignalResponse.choose3 = text
-                    bot.sendMessage(chatId, 'Стоп?')
+                    if (msg.text) {
+                        bot.sendMessage(chatId, 'Стоп?')
+                    }
                 }
 
                 if (text.includes('/stop')) {
                     fastSignalResponse.choose4 = text
-                    bot.sendMessage(chatId, 'Тейк 1')
+                    if (msg.text) {
+                        bot.sendMessage(chatId, 'Тейк 1')
+                    }
                 }
 
                 if (text.includes('/take')) {
