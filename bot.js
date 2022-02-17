@@ -104,31 +104,46 @@ bot.on('callback_query', (query) => {
             }
         })
 
-        bot.on('message', (msg) => {
+        bot.on('/\/ticker (.+)/', (msg) => {
             const text = msg.text
 
-            try {
-                if (text.includes('/ticker')) {
-                    fastSignalResponse.choose2 = text
-                    bot.sendMessage(chatId, 'Цена входа?')
-                    msg.text = ''
-                }
-
-                if (text.includes('/entry')) {
-                    fastSignalResponse.choose3 = text
-                    bot.sendMessage(chatId, 'Стоп?')
-                    msg.text = ''
-                }
-
-                if (text.includes('/stop')) {
-                    fastSignalResponse.choose4 = text
-                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
-                    msg.text = ''
-                }
-            } catch (e) {
-                bot.sendMessage(chatId, 'Произошла какая то ошибка!')
-            }
+            fastSignalResponse.choose2 = text
+            bot.sendMessage(chatId, 'Цена входа?')
         })
+
+        bot.on('/\/entry (.+)/', (msg) => {
+            const text = msg.text
+
+            fastSignalResponse.choose3 = text
+            bot.sendMessage(chatId, 'Стоп?')
+        })
+
+        bot.on('/\/stop (.+)/', (msg) => {
+            const text = msg.text
+
+            fastSignalResponse.choose4 = text
+                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
+        })
+
+            // try {
+            //     if (text.includes('/ticker')) {
+                    
+            //         msg.text = ''
+            //     }
+
+            //     if (text.includes('/entry')) {
+                    
+            //         msg.text = ''
+            //     }
+
+            //     if (text.includes('/stop')) {
+                    
+            //         msg.text = ''
+            //     }
+            // } catch (e) {
+            //     bot.sendMessage(chatId, 'Произошла какая то ошибка!')
+            // }
+        // })
     }
     
     if (query.data === 'usualSignal') {
