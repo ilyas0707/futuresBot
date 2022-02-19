@@ -14,10 +14,10 @@ const bot = new Telegraf(token)
 bot.settings(async (ctx) => {
     await ctx.setMyCommands([
         {command: '/create', description: 'Ввести данные'},
-        {command: '/ticker text', description: 'Тикер валюты'},
-        {command: '/entry number', description: 'Цена входа'},
-        {command: '/stop number', description: 'Стоп'},
-        {command: '/take number', description: 'Тейк'}
+        {command: '/ticker', description: 'Тикер валюты'},
+        {command: '/entry', description: 'Цена входа'},
+        {command: '/stop', description: 'Стоп'},
+        {command: '/take', description: 'Тейк'}
     ])
 })
 
