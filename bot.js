@@ -3,6 +3,24 @@ const { Telegraf } = require('telegraf')
 const token = '5123666737:AAHpIKzIkdtO5CrWNN_3Yw9EQxv41CubmJ0'
 const bot = new Telegraf(token)
 
+// bot.telegram.setMyCommands([
+//     {command: '/create', description: 'Ввести данные'},
+//     {command: '/ticker text', description: 'Тикер валюты'},
+//     {command: '/entry number', description: 'Цена входа'},
+//     {command: '/stop number', description: 'Стоп'},
+//     {command: '/take number', description: 'Тейк'}
+// ])
+
+bot.settings(async (ctx) => {
+    await ctx.setMyCommands([
+        {command: '/create', description: 'Ввести данные'},
+        {command: '/ticker text', description: 'Тикер валюты'},
+        {command: '/entry number', description: 'Цена входа'},
+        {command: '/stop number', description: 'Стоп'},
+        {command: '/take number', description: 'Тейк'}
+    ])
+})
+
 const signalChoose = [
     [
         {

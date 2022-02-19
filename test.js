@@ -6,13 +6,13 @@
 
 // console.log('bot server started...')
 
-// bot.setMyCommands([
-//     {command: '/create', description: 'Ввести данные'},
-//     {command: '/ticker', description: 'Тикер валюты'},
-//     {command: '/entry', description: 'Цена входа'},
-//     {command: '/stop', description: 'Стоп'},
-//     {command: '/take', description: 'Тейк'},
-// ])
+bot.setMyCommands([
+    {command: '/create', description: 'Ввести данные'},
+    {command: '/ticker', description: 'Тикер валюты'},
+    {command: '/entry', description: 'Цена входа'},
+    {command: '/stop', description: 'Стоп'},
+    {command: '/take', description: 'Тейк'},
+])
 
 // const signalChoose = [
 //     [
