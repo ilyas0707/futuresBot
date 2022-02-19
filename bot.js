@@ -1,18 +1,7 @@
-const TelegramBot = require('node-telegram-bot-api')
+const { Telegraf } = require('telegraf')
 
 const token = '5123666737:AAHpIKzIkdtO5CrWNN_3Yw9EQxv41CubmJ0'
-
-const bot = new TelegramBot(token, { polling: true })
-
-console.log('bot server started...')
-
-bot.setMyCommands([
-    {command: '/create', description: 'Ввести данные'},
-    {command: '/ticker', description: 'Тикер валюты'},
-    {command: '/entry', description: 'Цена входа'},
-    {command: '/stop', description: 'Стоп'},
-    {command: '/take', description: 'Тейк'},
-])
+const bot = new Telegraf(token)
 
 const signalChoose = [
     [
@@ -29,7 +18,7 @@ const signalChoose = [
     ],
 ]
 
-const fastSignalChoose1 = [
+const fastSignalChoose = [
     [
         {
             text: 'LONG',
@@ -44,7 +33,7 @@ const fastSignalChoose1 = [
     ],
 ]
 
-const fastSignalChoose2 = [
+const usualSignalChoose = [
     [
         {
             text: 'Да',
@@ -59,162 +48,107 @@ const fastSignalChoose2 = [
     ],
 ]
 
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id
-
-    bot.sendMessage(chatId, `Привет, ${msg.from.first_name}.\n`)
+bot.command('start', (ctx) => {
+    ctx.reply(`Привет, ${ctx.message.from.first_name}.\nДля добавления данных введите /create.`)
 })
 
-
-bot.onText(/\/create/, (msg) => {
-    const chatId = msg.chat.id
-
-    bot.sendMessage(chatId, 'Какой сигнал ты хочешь создать?', {
+bot.command('create', (ctx) => {
+    ctx.telegram.sendMessage(ctx.message.chat.id, 'Какой сигнал ты хочешь создать?', {
         reply_markup: {
             inline_keyboard: signalChoose,
         },
     })
 })
 
-bot.on('callback_query', (query) => {
-    const chatId = query.message.chat.id
+const signalResponse = {
+    choose1: '',
+    choose2: '',
+    choose3: '',
+    choose4: '',
+    choose5: [
 
-    const fastSignalResponse = {
-        choose1: '',
-        choose2: '',
-        choose3: '',
-        choose4: '',
-        choose5: [
+    ],
+    choose6: ''
+}
 
-        ]
+bot.action('fastSignal', ctx => {
+    signalResponse.choose6 = 'fastSignal'
+
+    ctx.telegram.sendMessage(ctx.chat.id, 'LONG или SHORT?', {
+        reply_markup: {
+            inline_keyboard: fastSignalChoose,
+        },
+    })
+})
+
+bot.action('usualSignal', ctx => {
+    signalResponse.choose6 = 'usualSignal'
+
+    ctx.telegram.sendMessage(ctx.chat.id, 'LONG или SHORT?', {
+        reply_markup: {
+            inline_keyboard: fastSignalChoose,
+        },
+    })
+})
+
+bot.action('long', ctx => {
+    signalResponse.choose1 = ctx.update.callback_query.data
+
+    ctx.reply('Тикер монеты?')
+})
+
+bot.action('short', ctx => {
+    signalResponse.choose1 = ctx.update.callback_query.data
+
+    ctx.reply('Тикер монеты?')
+})
+
+bot.command('ticker', ctx => {
+    signalResponse.choose2 = ctx.message.text
+
+    ctx.reply('Цена входа?')
+})
+
+bot.command('entry', ctx => {
+    signalResponse.choose3 = ctx.message.text
+
+    ctx.reply('Стоп?')
+})
+
+bot.command('stop', ctx => {
+    signalResponse.choose4 = ctx.message.text
+
+    if (signalResponse.choose6 === 'usualSignal') {
+        ctx.reply('Тейк 1')
+    } else {
+        ctx.reply(`${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}`)
+    }
+})
+
+bot.command('take', ctx => {
+    signalResponse.choose5.push({ id: signalResponse.choose5.length + 1, text: ctx.message.text })
+
+    if (signalResponse.choose5.length >= 0 && signalResponse.choose5.length < 3) {
+        ctx.reply(`Тейк ${signalResponse.choose5.length + 1}`)
     }
 
-    if (query.data === 'fastSignal') {
-        bot.sendMessage(chatId, 'LONG или SHORT?', {
+    if (signalResponse.choose5.length >= 3) {
+        ctx.telegram.sendMessage(ctx.chat.id, 'Добавить дополнительный тейк?', {
             reply_markup: {
-                inline_keyboard: fastSignalChoose1,
+                inline_keyboard: usualSignalChoose,
             },
-        })
-
-        bot.on('callback_query', (query) => {
-            if (query.data) {
-                fastSignalResponse.choose1 = query.data
-
-                bot.sendMessage(chatId, 'Тикер монеты?')
-            }
-        })
-
-        bot.onText(/\/ticker (.+)/, (msg) => {
-            const text = msg.text
-
-            fastSignalResponse.choose2 = text
-            bot.sendMessage(chatId, 'Цена входа?')
-        })
-
-        bot.onText(/\/entry (.+)/, (msg) => {
-            const text = msg.text
-
-            fastSignalResponse.choose3 = text
-            bot.sendMessage(chatId, 'Стоп?')
-        })
-
-        bot.onText(/\/stop (.+)/, (msg) => {
-            const text = msg.text
-
-            fastSignalResponse.choose4 = text
-                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}`)
-        })
-
-            // try {
-            //     if (text.includes('/ticker')) {
-                    
-            //         msg.text = ''
-            //     }
-
-            //     if (text.includes('/entry')) {
-                    
-            //         msg.text = ''
-            //     }
-
-            //     if (text.includes('/stop')) {
-                    
-            //         msg.text = ''
-            //     }
-            // } catch (e) {
-            //     bot.sendMessage(chatId, 'Произошла какая то ошибка!')
-            // }
-        // })
-    }
-    
-    if (query.data === 'usualSignal') {
-        bot.sendMessage(chatId, 'LONG или SHORT?', {
-            reply_markup: {
-                inline_keyboard: fastSignalChoose1,
-            },
-        })
-
-        bot.on('callback_query', (query) => {
-            if (query.data === 'long' || query.data === 'short') {
-                fastSignalResponse.choose1 = query.data
-
-                bot.sendMessage(chatId, 'Тикер монеты?')
-            }
-
-            if (query.data === 'yes' || query.data === 'no') {
-                if (query.data === 'yes') {
-                    bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
-                }
-
-                if (query.data === 'no') {
-                    bot.sendMessage(chatId, `${fastSignalResponse.choose1.toUpperCase()}\n${fastSignalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${fastSignalResponse.choose3.replace('/entry ', '')}\nСтоп ${fastSignalResponse.choose4.replace('/stop ', '')}\n${fastSignalResponse.choose5.map(({ id, text }) => {
-                        return `Тейк ${id} - ${text.replace('/take ', '')}`
-                    }).join('\n')}`)
-                }
-            }
-        })
-
-        bot.on('message', (msg) => {
-            const text = msg.text
-
-            try {
-                if (text.includes('/ticker')) {
-                    fastSignalResponse.choose2 = text
-                    bot.sendMessage(chatId, 'Цена входа?')
-                    msg.text = ''
-                }
-
-                if (text.includes('/entry')) {
-                    fastSignalResponse.choose3 = text
-                    bot.sendMessage(chatId, 'Стоп?')
-                    msg.text = ''
-                }
-
-                if (text.includes('/stop')) {
-                    fastSignalResponse.choose4 = text
-                    bot.sendMessage(chatId, 'Тейк 1')
-                    msg.text = ''
-                }
-
-                if (text.includes('/take')) {
-                    fastSignalResponse.choose5.push({ id: fastSignalResponse.choose5.length + 1, text: text })
-                    
-                    if (fastSignalResponse.choose5.length >= 0 && fastSignalResponse.choose5.length < 3) {
-                        bot.sendMessage(chatId, `Тейк ${fastSignalResponse.choose5.length + 1}`)
-                        msg.text = ''
-                    }
-
-                    if (fastSignalResponse.choose5.length >= 3) {
-                        bot.sendMessage(chatId, 'Добавить дополнительный тейк?', {
-                            reply_markup: {
-                                inline_keyboard: fastSignalChoose2,
-                            },
-                        })
-                        msg.text = ''
-                    }
-                }
-            } catch (e) {
-                bot.sendMessage(chatId, 'Произошла какая то ошибка!')
-            }
         })
     }
 })
+
+bot.action('yes', ctx => {
+    ctx.reply(`Тейк ${signalResponse.choose5.length + 1}`)
+})
+
+bot.action('no', ctx => {
+    ctx.reply(`${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}\n${signalResponse.choose5.map(({ id, text }) => {
+        return `Тейк ${id} - ${text.replace('/take ', '')}`
+    }).join('\n')}`)
+})
+
+bot.launch()
