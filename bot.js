@@ -1,6 +1,6 @@
 const { Telegraf } = require('telegraf')
 
-const token = '5123666737:AAHpIKzIkdtO5CrWNN_3Yw9EQxv41CubmJ0'
+const token = '5227735813:AAET93ObeBhFZeoKaLAMj9oSUTgFSQU3BXU'
 const bot = new Telegraf(token)
 
 // bot.telegram.setMyCommands([
@@ -14,10 +14,10 @@ const bot = new Telegraf(token)
 bot.settings(async (ctx) => {
     await ctx.setMyCommands([
         {command: '/create', description: 'Ввести данные'},
-        {command: '/ticker', description: 'Тикер валюты'},
-        {command: '/entry', description: 'Цена входа'},
-        {command: '/stop', description: 'Стоп'},
-        {command: '/take', description: 'Тейк'}
+        // {command: '/ticker', description: 'Тикер валюты'},
+        // {command: '/entry', description: 'Цена входа'},
+        // {command: '/stop', description: 'Стоп'},
+        // {command: '/take', description: 'Тейк'}
     ])
 })
 
@@ -121,43 +121,80 @@ bot.action('short', ctx => {
     ctx.reply('Тикер монеты?')
 })
 
-bot.command('ticker', ctx => {
-    signalResponse.choose2 = ctx.message.text
+bot.on('text', ctx => {
+    if (signalResponse.choose2 === '') {
+        signalResponse.choose2 = ctx.message.text
+        ctx.reply('Цена входа?')
+    } else if (signalResponse.choose3 === '') {
+        signalResponse.choose3 = ctx.message.text
+        ctx.reply('Стоп?')
+    } else if (signalResponse.choose4 === '') {
+        signalResponse.choose4 = ctx.message.text
 
-    ctx.reply('Цена входа?')
-})
-
-bot.command('entry', ctx => {
-    signalResponse.choose3 = ctx.message.text
-
-    ctx.reply('Стоп?')
-})
-
-bot.command('stop', ctx => {
-    signalResponse.choose4 = ctx.message.text
-
-    if (signalResponse.choose6 === 'usualSignal') {
-        ctx.reply('Тейк 1')
-    } else {
-        ctx.reply(`${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}`)
+        if (signalResponse.choose6 === 'usualSignal') {
+            ctx.reply('Тейк 1')
+        } else {
+            ctx.reply(`${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}`)
+            ctx.telegram.sendMessage('@futuresContract', `${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}`)
+            signalResponse.choose1 = ''
+            signalResponse.choose2 = ''
+            signalResponse.choose3 = ''
+            signalResponse.choose4 = ''
+        }
+    } else if (signalResponse.choose5) {
+        signalResponse.choose5.push({ id: signalResponse.choose5.length + 1, text: ctx.message.text })
+        
+        if (signalResponse.choose5.length >= 0 && signalResponse.choose5.length < 3) {
+            ctx.reply(`Тейк ${signalResponse.choose5.length + 1}`)
+        }
+    
+        if (signalResponse.choose5.length >= 3) {
+            ctx.telegram.sendMessage(ctx.chat.id, 'Добавить дополнительный тейк?', {
+                reply_markup: {
+                    inline_keyboard: usualSignalChoose,
+                },
+            })
+        }
     }
 })
 
-bot.command('take', ctx => {
-    signalResponse.choose5.push({ id: signalResponse.choose5.length + 1, text: ctx.message.text })
+// bot.command('ticker', ctx => {
+//     signalResponse.choose2 = ctx.message.text
 
-    if (signalResponse.choose5.length >= 0 && signalResponse.choose5.length < 3) {
-        ctx.reply(`Тейк ${signalResponse.choose5.length + 1}`)
-    }
+//     ctx.reply('Цена входа?')
+// })
 
-    if (signalResponse.choose5.length >= 3) {
-        ctx.telegram.sendMessage(ctx.chat.id, 'Добавить дополнительный тейк?', {
-            reply_markup: {
-                inline_keyboard: usualSignalChoose,
-            },
-        })
-    }
-})
+// bot.command('entry', ctx => {
+//     signalResponse.choose3 = ctx.message.text
+
+//     ctx.reply('Стоп?')
+// })
+
+// bot.command('stop', ctx => {
+//     signalResponse.choose4 = ctx.message.text
+
+//     if (signalResponse.choose6 === 'usualSignal') {
+//         ctx.reply('Тейк 1')
+//     } else {
+//         ctx.reply(`${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}`)
+//     }
+// })
+
+// bot.command('take', ctx => {
+//     signalResponse.choose5.push({ id: signalResponse.choose5.length + 1, text: ctx.message.text })
+
+//     if (signalResponse.choose5.length >= 0 && signalResponse.choose5.length < 3) {
+//         ctx.reply(`Тейк ${signalResponse.choose5.length + 1}`)
+//     }
+
+//     if (signalResponse.choose5.length >= 3) {
+//         ctx.telegram.sendMessage(ctx.chat.id, 'Добавить дополнительный тейк?', {
+//             reply_markup: {
+//                 inline_keyboard: usualSignalChoose,
+//             },
+//         })
+//     }
+// })
 
 bot.action('yes', ctx => {
     ctx.reply(`Тейк ${signalResponse.choose5.length + 1}`)
@@ -167,6 +204,14 @@ bot.action('no', ctx => {
     ctx.reply(`${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}\n${signalResponse.choose5.map(({ id, text }) => {
         return `Тейк ${id} - ${text.replace('/take ', '')}`
     }).join('\n')}`)
+    ctx.telegram.sendMessage('@futuresContract', `${signalResponse.choose1.toUpperCase()}\n${signalResponse.choose2.replace('/ticker ', '')}USDT\nВход ${signalResponse.choose3.replace('/entry ', '')}\nСтоп ${signalResponse.choose4.replace('/stop ', '')}\n${signalResponse.choose5.map(({ id, text }) => {
+        return `Тейк ${id} - ${text.replace('/take ', '')}`
+    }).join('\n')}`)
+    signalResponse.choose1 = ''
+    signalResponse.choose2 = ''
+    signalResponse.choose3 = ''
+    signalResponse.choose4 = ''
+    signalResponse.choose5 = []
 })
 
 bot.launch()
